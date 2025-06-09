@@ -1,0 +1,51 @@
+# Ignore build directories
+build/
+CMakeFiles/
+x64/
+EclipseDumper/  # Output directory
+
+# Ignore IDE/editor files
+.vs/
+.vscode/
+
+# Ignore compiled binaries and intermediate files
+*.dll
+*.ilk
+*.pdb
+*.exe
+*.lib
+*.obj
+*.iobj
+*.ipdb
+*.idb
+*.log
+*.tlog
+*.lastbuildstate
+*.recipe
+*.pch
+*.suo
+*.user
+*.userosscache
+
+# Ignore CMake generated files
+cmake_install.cmake
+CMakeCache.txt
+Makefile
+
+
+
+# Ignore project-specific artifacts
+EclipseDumperProject.z
+vcpkg.applocal.log
+
+# Ignore debug/release build artifacts
+**/Debug/
+**/Release/
+
+# Ignore IntelliSense files (VSCode)
+.cpp.hint
+
+# Ignore module interface files
+*.ifc.*
+OSREL5.6_dump.cs
+Untitled
