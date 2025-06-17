@@ -15,7 +15,7 @@ Compile the project then inject it with your favorite injector wait until login 
 
 - [x] C# Definitions
 - [x] Script.json (for applying names in ida) [#1](https://github.com/Yoshk4e/EclipseeDumper/issues/1)
-- [ ] ProtoBuf (Under construction)
+- [ ] ProtoBuf (Under construction)( me so skill issue so won't be any time soon )
 
 ## Need help?
 - You can open an issue
