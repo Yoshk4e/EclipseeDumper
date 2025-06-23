@@ -32,4 +32,4 @@ Contributions are welcome, You can Submit a Pull request i'll review it and deci
 
 ## License 
 
-This project is licensed under the [MIT](EclipseDumper/LICENSE) license
+This project is licensed under the [MIT](EclipseeDumper/LICENSE) license
