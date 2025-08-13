@@ -37,16 +37,42 @@ const char* Il2CppApi::ClassGetName(Il2CppClass* klass) {
 }
 
 bool Il2CppApi::ClassIsEnum(const Il2CppClass* klass) {
-    return (*reinterpret_cast<const uint8_t*>(
-        reinterpret_cast<const char*>(klass) + 201) & 0x20) != 0;
+    auto func = RemoteFuncCall<bool, const Il2CppClass*>(
+        il2CppOffsets::Class::il2cpp_class_is_enum
+    );
+    auto result = func(klass) != 0;
+
+    return result;
+}
+
+bool Il2CppApi::ClassIsValueType(const Il2CppClass* klass) {
+    auto func = RemoteFuncCall<bool, const Il2CppClass*>(
+        il2CppOffsets::Type::class_is_valuetype
+    );
+
+    return func(klass);
+}
+
+int Il2CppApi::ClassGetFlags(const Il2CppClass* klass) {
+    auto func = RemoteFuncCall<bool, const Il2CppClass*>(
+        il2CppOffsets::Class::il2cpp_class_get_flags
+    );
+    return func(klass);
 }
 
 Il2CppClass* Il2CppApi::ClassGetParent(Il2CppClass* klass) {
-    return *reinterpret_cast<Il2CppClass**>(reinterpret_cast<char*>(klass) + 56);
+    auto func = RemoteFuncCall<Il2CppClass*, Il2CppClass*>(
+        il2CppOffsets::Class::il2cpp_class_get_parent
+    );
+    return func(klass);
 }
 
+
 const Il2CppType* Il2CppApi::ClassGetType(Il2CppClass* klass) {
-    return reinterpret_cast<const Il2CppType*>(reinterpret_cast<char*>(klass) + 32);
+    auto func = RemoteFuncCall<const Il2CppType*, Il2CppClass*>(
+        il2CppOffsets::Class::il2cpp_class_get_type
+    );
+    return func(klass);
 }
 
 Il2CppClass* Il2CppApi::ClassFromName(const Il2CppImage* image, const char* namespaze, const char* name) {
