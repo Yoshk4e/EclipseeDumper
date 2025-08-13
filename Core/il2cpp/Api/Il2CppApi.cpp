@@ -222,11 +222,13 @@ size_t Il2CppApi::FieldGetOffset(uintptr_t* field) {
 
 // Generic type API implementations
 const size_t* Il2CppApi::ClassGetInterfaces(const uint8_t* klass, size_t& count) {
-    const uint64_t count_ptr = *reinterpret_cast<const uint64_t*>(klass + 120);
-    count = (*reinterpret_cast<const uint8_t*>(count_ptr + 65)) ^ 0x56ULL;
-    const size_t* interfaces = *reinterpret_cast<const size_t* const*>(klass + 112);
+    const uint64_t count_ptr = *reinterpret_cast<const uint64_t*>(klass + 24);
+    count = static_cast<size_t>(static_cast<unsigned char>(
+        *reinterpret_cast<const uint8_t*>(count_ptr + 65) - 50));
+    const size_t* interfaces = *reinterpret_cast<const size_t* const*>(klass + 56);
     return interfaces ? interfaces : nullptr;
 }
+
 
 const uint8_t* Il2CppApi::GenericClassGetGenericContainer(const uint8_t* generic_class) {
     auto raw = *reinterpret_cast<const uint64_t*>(generic_class + 8);
