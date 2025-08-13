@@ -8,12 +8,12 @@ std::string Il2CppMetadata::DumpClass(Il2CppClass* klass) {
     Il2CppApi::ClassInit(klass);
     auto QualName = Il2CppApi::TypeGetName(Il2CppApi::ClassGetType(klass));
     outPut << "\n// Namespace: " << Il2CppApi::ClassGetNamespace(klass) << "\n";
-    auto flags = *(uint32_t*)((char*)klass + il2CppOffsets::Class::il2cpp_class_get_flags);
+    auto flags = Il2CppApi::ClassGetFlags(klass);
     if (flags & TYPE_ATTRIBUTE_SERIALIZABLE) {
         outPut << "[Serializable]\n";
     }
     //TODO attribute
-    auto is_valuetype = *reinterpret_cast<bool*>((char*)klass + il2CppOffsets::Type::is_valuetype);
+    bool is_valuetype = Il2CppApi::ClassIsValueType(klass);
     auto is_enum = Il2CppApi::ClassIsEnum(klass);
     auto visibility = flags & TYPE_ATTRIBUTE_VISIBILITY_MASK;
     switch (visibility) {
@@ -59,9 +59,9 @@ std::string Il2CppMetadata::DumpClass(Il2CppClass* klass) {
     }
     outPut << QualName;
     std::vector<std::string> extends;
-    auto parent = *reinterpret_cast<Il2CppClass**>((char*)klass + 56);
+    auto parent = Il2CppApi::ClassGetParent(klass);
     if (!is_valuetype && !is_enum && parent) {
-        auto parent_type = *reinterpret_cast<Il2CppType**>((char*)parent + 48);
+        auto parent_type = Il2CppApi::ClassGetType(parent);
         if (parent_type->type != IL2CPP_TYPE_OBJECT) {
             extends.emplace_back(Il2CppApi::ClassGetName(parent));
         }
