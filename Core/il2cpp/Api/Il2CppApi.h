@@ -21,6 +21,8 @@ public:
     static const char* ClassGetNamespace(Il2CppClass* klass);
     static const char* ClassGetName(Il2CppClass* klass);
     static bool ClassIsEnum(const Il2CppClass* klass);
+    static bool ClassIsValueType(const Il2CppClass* klass);
+    static int ClassGetFlags(const Il2CppClass* klass);
     static Il2CppClass* ClassGetParent(Il2CppClass* klass);
     static const Il2CppType* ClassGetType(Il2CppClass* klass);
     static Il2CppClass* ClassFromName(const Il2CppImage* image, const char* namespaze, const char* name);
