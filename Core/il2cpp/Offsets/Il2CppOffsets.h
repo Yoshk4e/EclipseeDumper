@@ -34,13 +34,13 @@ namespace il2CppOffsets {
 		constexpr int il2cpp_method_get_flags = 42;
 	}
 	namespace GC {
-		constexpr int il2cpp_gc_disable =;
+		constexpr int il2cpp_gc_disable = 0x0;
 	}
 	namespace Domain {
 		constexpr int il2cpp_domain_get =;
-		constexpr int il2cpp_domain_get_assemblies = ;
-		constexpr int il2cpp_domain_assembly_open = ;
-		constexpr int il2cpp_assembly_get_image = ;
+		constexpr int il2cpp_domain_get_assemblies = 0x0;
+		constexpr int il2cpp_domain_assembly_open = 0x0;
+		constexpr int il2cpp_assembly_get_image = 0x0;
 
 	}
 	namespace Field {
@@ -51,8 +51,8 @@ namespace il2CppOffsets {
 		constexpr int il2cpp_field_static_get_value = 0x499890;
 	}
 	namespace RuntimeStuff {
-		constexpr int il2cpp_runtime_class_init =;
-		constexpr int il2cpp_vvm_class_init =;
+		constexpr int il2cpp_runtime_class_init = 0x0;
+		constexpr int il2cpp_vvm_class_init = 0x0;
 	}
 	namespace Type {
 		constexpr int class_is_valuetype = 0x499430;
