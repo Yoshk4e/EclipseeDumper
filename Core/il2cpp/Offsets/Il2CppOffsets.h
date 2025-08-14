@@ -37,7 +37,7 @@ namespace il2CppOffsets {
 		constexpr int il2cpp_gc_disable = 0x0;
 	}
 	namespace Domain {
-		constexpr int il2cpp_domain_get =;
+		constexpr int il2cpp_domain_get = 0x0;
 		constexpr int il2cpp_domain_get_assemblies = 0x0;
 		constexpr int il2cpp_domain_assembly_open = 0x0;
 		constexpr int il2cpp_assembly_get_image = 0x0;
@@ -52,7 +52,11 @@ namespace il2CppOffsets {
 	}
 	namespace RuntimeStuff {
 		constexpr int il2cpp_runtime_class_init = 0x0;
-		constexpr int il2cpp_vvm_class_init = 0x0;
+		constexpr int il2cpp_vm_class_init = 0x0;
+		constexpr int il2cpp_thread_attach = 0x0;
+		constexpr int il2cpp_vm_array_new = 0x0;
+		constexpr int il2cpp_object_new = 0x0;
+		constexpr int il2cpp_runtime_invoke = 0x0;
 	}
 	namespace Type {
 		constexpr int class_is_valuetype = 0x499430;
