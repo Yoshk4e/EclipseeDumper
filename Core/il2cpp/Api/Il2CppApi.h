@@ -13,9 +13,6 @@
 
 class Il2CppApi {
 public:
-    static void Initialize();
-    static uintptr_t GetImageBase();
-
     // Type system API
     static Il2CppClass* GetTypeInfoFromTypeDefinitionIndex(TypeDefinitionIndex index);
     static const char* ClassGetNamespace(Il2CppClass* klass);
@@ -29,12 +26,12 @@ public:
     static bool ClassInit(Il2CppClass* klass);
 
     // Method API
-    static uintptr_t* ClassGetMethods(Il2CppClass* klass, void* iter);
-    static const char* MethodGetName(const uintptr_t* MethodPtr);
-    static const Il2CppType* MethodGetReturnType(const uintptr_t* method);
-    static uintptr_t* MethodGetParamCount(const uintptr_t* method);
-    static const Il2CppType* MethodGetParam(const uintptr_t* method, uint32_t index);
-    static const char* MethodGetParamName(const uintptr_t* method, uint32_t index);
+    static const uint8_t* ClassGetMethods(Il2CppClass* klass, void* iter);
+    static const char* MethodGetName(const uint8_t* MethodPtr);
+    static const Il2CppType* MethodGetReturnType(const uint8_t* method);
+    static const uint32_t MethodGetParamCount(const uint8_t* method);
+    static const Il2CppType* MethodGetParam(const uint8_t* method, uint32_t index);
+    static const char* MethodGetParamName(const uint8_t* method, uint32_t index);
     static const uintptr_t* ClassGetMethodFromName(Il2CppClass* klass, const char* name, int argsCount);
     static std::string GetMethodModifier(uint32_t flags);
 
@@ -44,6 +41,8 @@ public:
     static const Il2CppType* FieldGetType(uintptr_t* field);
     static const char* FieldGetName(uintptr_t* field);
     static void FieldStaticGetValue(uintptr_t* field, void* value);
+    static size_t FieldStaticGetValue(Il2CppField* field);
+    static bool FieldIsInstance(uintptr_t* field);
     static size_t FieldGetOffset(uintptr_t* field);
 
     // Generic type API
@@ -61,14 +60,22 @@ public:
     // Runtime API
     static const uintptr_t* RuntimeClassInit();
     static Il2CppDomain* DomainGet();
-    static const Il2CppAssembly* DomainAssemblyOpen(Il2CppDomain* domain, const char* name);
+    static Il2CppObject* MethodInvoke(const uintptr_t* method, void* obj, void** params);
+    static const Il2CppAssembly* DomainAssemblyOpen(const char* name);
+    static const Il2CppImage* AssemblyGetImage(const Il2CppAssembly* assembly);
+    static Il2CppClass* ObjectGetClass(Il2CppObject* obj);
+    static size_t ImageGetClassCount(const Il2CppImage* image);
+    static Il2CppThread* ThreadAttach(Il2CppDomain* domain);
+    static Il2CppArray* ArrayNew(Il2CppClass* elementTypeInfo, il2cpp_array_size_t length);
+    static Il2CppObject* ObjectNew(Il2CppClass* klass);
+    static void GCDisable();
+    static const Il2CppClass* ImageGetType(const Il2CppImage* image, size_t index);
+
 
 private:
-    static uintptr_t gIBaseAddress;
-
     template <typename ReturnType, typename... Args>
     static auto RemoteFuncCall(uintptr_t offset) {
         using FuncType = ReturnType(*)(Args...);
-        return reinterpret_cast<FuncType>(offset);
+        return reinterpret_cast<FuncType>(offset + il2CppOffsets::gIBaseAddress);
     }
 };
