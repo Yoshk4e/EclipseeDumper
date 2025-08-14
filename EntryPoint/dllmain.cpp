@@ -57,7 +57,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved) {
     }
 
     std::cout << "\n=== Starting Dump Process ===\n";
-    constexpr int totalTypes = 55851;
+    constexpr int totalTypes = 56983;
     std::cout << "Scanning 0-" << (totalTypes - 1) << " TypeDefinition indices...\n\n";
 
     std::ofstream outFile("OSREL5.6Dump.cs");
