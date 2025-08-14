@@ -3,6 +3,7 @@
 
 //APIs Offsets Should Be Changed Every Update!
 namespace il2CppOffsets {
+	const uintptr_t gIBaseAddress = reinterpret_cast<const uintptr_t>(GetModuleHandleA("GenshinImpact.exe"));
 	constexpr int GetTypeInfoFromTypeDefinitionIndex = 0x50C180;
 	//easily gotten by searching this string " because generic types cannot have explicit layout."
 	namespace Class {
