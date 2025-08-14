@@ -1,3 +1,4 @@
+#pragma once 
 #include <cstdint>
 typedef uint16_t Il2CppChar;
 typedef uintptr_t il2cpp_array_size_t;
@@ -7,6 +8,8 @@ typedef char Il2CppNativeChar;
 
 typedef struct Il2CppMemoryCallbacks Il2CppMemoryCallbacks;
 typedef struct Il2CppImage Il2CppImage;
+typedef struct Il2CppMethod Il2CppMethod;
+typedef struct Il2CppField Il2CppField;
 typedef struct Il2CppClass Il2CppClass;
 typedef struct Il2CppArrayBounds Il2CppArrayBounds;
 typedef struct Il2CppAssembly Il2CppAssembly;
@@ -29,22 +32,22 @@ typedef struct Il2CppManagedMemorySnapshot Il2CppManagedMemorySnapshot;
 typedef struct Il2CppDebuggerTransport Il2CppDebuggerTransport;
 typedef struct Il2CppMethodDebugInfo Il2CppMethodDebugInfo;
 typedef struct Il2CppCustomAttrInfo Il2CppCustomAttrInfo;
-typedef const struct ___Il2CppMetadataTypeHandle *Il2CppMetadataTypeHandle;
-typedef const struct ___Il2CppMetadataGenericParameterHandle *Il2CppMetadataGenericParameterHandle;
+typedef const struct ___Il2CppMetadataTypeHandle* Il2CppMetadataTypeHandle;
+typedef const struct ___Il2CppMetadataGenericParameterHandle* Il2CppMetadataGenericParameterHandle;
 
 typedef void (*Il2CppMethodPointer)();
 
-typedef void (*il2cpp_register_object_callback)(Il2CppObject **arr, int size, void *userdata);
+typedef void (*il2cpp_register_object_callback)(Il2CppObject** arr, int size, void* userdata);
 
-typedef void *(*il2cpp_liveness_reallocate_callback)(void *ptr, size_t size, void *userdata);
+typedef void* (*il2cpp_liveness_reallocate_callback)(void* ptr, size_t size, void* userdata);
 
-typedef void (*Il2CppFrameWalkFunc)(const Il2CppStackFrameInfo *info, void *user_data);
+typedef void (*Il2CppFrameWalkFunc)(const Il2CppStackFrameInfo* info, void* user_data);
 
-typedef size_t(*Il2CppBacktraceFunc)(Il2CppMethodPointer *buffer, size_t maxSize);
+typedef size_t(*Il2CppBacktraceFunc)(Il2CppMethodPointer* buffer, size_t maxSize);
 
-typedef const Il2CppNativeChar *(*Il2CppSetFindPlugInCallback)(const Il2CppNativeChar *);
+typedef const Il2CppNativeChar* (*Il2CppSetFindPlugInCallback)(const Il2CppNativeChar*);
 
-typedef void (*Il2CppLogCallback)(const char *);
+typedef void (*Il2CppLogCallback)(const char*);
 
 typedef enum {
     IL2CPP_UNHANDLED_POLICY_LEGACY,
@@ -86,7 +89,7 @@ typedef enum Il2CppTypeEnum {
     IL2CPP_TYPE_STRING = 0x0e,
     IL2CPP_TYPE_PTR = 0x0f,
 
-	//updated to current version
+    //updated to current version
     IL2CPP_TYPE_BYREF = 0x40,
 
     IL2CPP_TYPE_VALUETYPE = 0x11,
@@ -114,20 +117,20 @@ typedef enum Il2CppTypeEnum {
 typedef struct Il2CppType {
     char pad[8];
     unsigned int attrs;
-    Il2CppTypeEnum type: 8;
+    Il2CppTypeEnum type : 8;
 } Il2CppType;
 
 typedef struct Il2CppObject {
     union {
-        Il2CppClass *klass;
-        Il2CppVTable *vtable;
+        Il2CppClass* klass;
+        Il2CppVTable* vtable;
     };
-    MonitorData *monitor;
+    MonitorData* monitor;
 } Il2CppObject;
 
 typedef struct Il2CppArray {
     Il2CppObject obj;
-    Il2CppArrayBounds *bounds;
+    Il2CppArrayBounds* bounds;
     il2cpp_array_size_t max_length;
-    void *vector[32];
+    void* vector[32];
 } Il2CppArray;
