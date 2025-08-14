@@ -1,6 +1,7 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
 #include <functional>
+#include "../ProtoGen/ProtoBuf.h"
 #include "../Core/il2cpp/Api/Il2CppApi.h"
 #include "../Core/il2cpp/Metadata/Il2CppMetadata.h"
 #include "../Utils/ScriptJson.h"
@@ -11,6 +12,16 @@
 #define DEBUG_VER
 //#define RELEASE_VER
 
+static DWORD WINAPI UnloadDll(LPVOID d) {
+
+    std::cout << "Dll Unloaded\n";
+
+    FreeConsole();
+
+    FreeLibraryAndExitThread((HMODULE)d, 0);
+
+    return 0;
+}
 
 BOOL WINAPI DllMain(const HMODULE instance, DWORD reason, LPVOID lpReserved)
 {
@@ -31,9 +42,6 @@ BOOL WINAPI DllMain(const HMODULE instance, DWORD reason, LPVOID lpReserved)
 }
 
 DWORD WINAPI MainThread(LPVOID lpReserved) {
-    Il2CppApi::Initialize();
-    auto gIBaseAddress = Il2CppApi::GetImageBase();
-
     // Setup console for UTF-8 output
     AllocConsole();
     SetConsoleOutputCP(CP_UTF8);
@@ -56,17 +64,17 @@ DWORD WINAPI MainThread(LPVOID lpReserved) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
+    
     std::cout << "\n=== Starting Dump Process ===\n";
     constexpr int totalTypes = 56983;
     std::cout << "Scanning 0-" << (totalTypes - 1) << " TypeDefinition indices...\n\n";
 
-    std::ofstream outFile("OSREL5.6Dump.cs");
+    std::ofstream outFile("OSREL5.7_Dump.cs");
     if (!outFile.is_open()) {
         std::cerr << "FATAL ERROR: Failed to create output file!\n";
         return 1;
     }
 
-    // Instantiate progress reporter
     ProgressReporter reporter(totalTypes, 50);
 
     int validClasses = 0;
@@ -75,12 +83,7 @@ DWORD WINAPI MainThread(LPVOID lpReserved) {
     int nullClasses = 0;
     int errorClasses = 0;
 
-    Il2CppApi::RuntimeClassInit();
-    for (int index = 0; index < totalTypes; ++index) {
-        // Ensure class init each iteration
-        Il2CppApi::RuntimeClassInit();
-
-        // Dump logic
+    for (uint64_t index = 0; index < totalTypes; ++index) {
         Il2CppClass* klass = Il2CppApi::GetTypeInfoFromTypeDefinitionIndex(index);
         if (!klass) {
             nullClasses++;
@@ -98,20 +101,22 @@ DWORD WINAPI MainThread(LPVOID lpReserved) {
             }
         }
 
-        // Update progress bar
         reporter.update(index);
     }
     reporter.finish();
 
-    // Final report
     std::cout << "\n=== Dump Complete ===\n"
-        << "Processed " << totalTypes << " type definitions\n"
-        << "Valid: " << validClasses << " | Null: " << nullClasses
-        << " | Errors: " << errorClasses << "\n"
-        << "Methods: " << totalMethods << " | Fields: " << totalFields << "\n"
-        << "Output: OSREL5.6Dump.cs\n";
+              << "Processed " << totalTypes << " type definitions\n"
+              << "Valid: " << validClasses << " | Null: " << nullClasses
+              << " | Errors: " << errorClasses << "\n"
+              << "Methods: " << totalMethods << " | Fields: " << totalFields << "\n"
+              << "Output: OSREL5.6Dump.cs\n";
 
     outFile.close();
+   
+
+
+    // Generate script.json (optional, keep if needed)
     std::cout << "\n=== Generating Script JSON ===\n";
     std::ofstream jsonFile("script.json");
     if (jsonFile.is_open()) {
@@ -123,7 +128,8 @@ DWORD WINAPI MainThread(LPVOID lpReserved) {
         std::cerr << "Failed to create script.json\n";
     }
 
-	std::cout << "\nDumping completed\n";
+    std::cout << "\nDumping completed\n";
+
+    UnloadDll(lpReserved);
     return 0;
 }
-
