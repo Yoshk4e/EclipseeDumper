@@ -11,45 +11,39 @@ using namespace std;
 void ScriptJsonGenerator::WriteEscapedString(stringstream& ss, const string& value) {
     for (char c : value) {
         switch (c) {
-            case '"':  ss << "\\\""; break;
-            case '\\': ss << "\\\\"; break;
-            case '\n': ss << "\\n";  break;
-            case '\r': ss << "\\r";  break;
-            case '\t': ss << "\\t";  break;
-            default:   ss << c;      break;
+        case '"':  ss << "\\\""; break;
+        case '\\': ss << "\\\\"; break;
+        case '\n': ss << "\\n";  break;
+        case '\r': ss << "\\r";  break;
+        case '\t': ss << "\\t";  break;
+        default:   ss << c;      break;
         }
     }
 }
 
-auto GetBase() {
-    Il2CppApi::Initialize();
-    auto gIBaseAddress{ Il2CppApi::GetImageBase() };
-    return gIBaseAddress;
-}
 
-auto gIBaseAddress = GetBase();
 
 string ScriptJsonGenerator::GenerateJson() {
     stringstream ss;
     ss << "{";
-    
+
     // ScriptString (empty array)
     ss << "\"ScriptString\":[],";
-    
+
     // ScriptMetadata
     ss << "\"ScriptMetadata\":";
     WriteTypeMetadata(ss);
     ss << ",";
-    
+
     // ScriptMethod
     ss << "\"ScriptMethod\":";
     WriteMethods(ss);
     ss << ",";
-    
+
     // ScriptMetadataMethod
     ss << "\"ScriptMetadataMethod\":";
     WriteMethodRefs(ss);
-    
+
     ss << "}";
     return ss.str();
 }
@@ -58,14 +52,14 @@ string ScriptJsonGenerator::GenerateJson() {
 void ScriptJsonGenerator::WriteMethods(stringstream& ss) {
     vector<string> entries;
     ss << "[";
-    
-    for (int index = 0; index <= 55850; ++index) {
+
+    for (int index = 0; index <= 56983; ++index) {
         if (Il2CppClass* klass = Il2CppApi::GetTypeInfoFromTypeDefinitionIndex(index)) {
             void* methodIter = nullptr;
             while (auto method = Il2CppApi::ClassGetMethods(klass, &methodIter)) {
                 stringstream entry;
                 entry << "{"
-                    << "\"Address\":" << ((*(uint64_t*)((char*)method + 8)) - gIBaseAddress) << ","
+                    << "\"Address\":" << ((*(uint64_t*)((char*)method + 8)) - il2CppOffsets::gIBaseAddress) << ","
                     << "\"Name\":\"" << Il2CppApi::ClassGetName(klass) << "$$" << Il2CppApi::MethodGetName(method) << "\","
                     << "\"Signature\":\"\","
                     << "\"TypeSignature\":\"\""
@@ -74,7 +68,7 @@ void ScriptJsonGenerator::WriteMethods(stringstream& ss) {
             }
         }
     }
-    
+
     for (size_t i = 0; i < entries.size(); ++i) {
         if (i > 0) ss << ",";
         ss << entries[i];
@@ -85,19 +79,19 @@ void ScriptJsonGenerator::WriteMethods(stringstream& ss) {
 void ScriptJsonGenerator::WriteTypeMetadata(stringstream& ss) {
     vector<string> entries;
     ss << "[";
-    
-    for (int index = 0; index <= 55850; ++index) {
+
+    for (int index = 0; index <= 56983; ++index) {
         if (Il2CppClass* klass = Il2CppApi::GetTypeInfoFromTypeDefinitionIndex(index)) {
             stringstream entry;
             entry << "{"
-                << "\"Address\":" << (reinterpret_cast<uintptr_t>(klass) - gIBaseAddress) << ","
+                << "\"Address\":" << (reinterpret_cast<uintptr_t>(klass) - il2CppOffsets::gIBaseAddress) << ","
                 << "\"Name\":\"" << Il2CppApi::ClassGetName(klass) << "_TypeInfo\","
                 << "\"Signature\":\"" << Il2CppApi::ClassGetName(klass) << "_c*\""
                 << "}";
             entries.push_back(entry.str());
         }
     }
-    
+
     for (size_t i = 0; i < entries.size(); ++i) {
         if (i > 0) ss << ",";
         ss << entries[i];
@@ -108,22 +102,22 @@ void ScriptJsonGenerator::WriteTypeMetadata(stringstream& ss) {
 void ScriptJsonGenerator::WriteMethodRefs(stringstream& ss) {
     vector<string> entries;
     ss << "[";
-    
-    for (int index = 0; index <= 55850; ++index) {
+
+    for (int index = 0; index <= 56983; ++index) {
         if (Il2CppClass* klass = Il2CppApi::GetTypeInfoFromTypeDefinitionIndex(index)) {
             void* methodIter = nullptr;
             while (auto method = Il2CppApi::ClassGetMethods(klass, &methodIter)) {
                 stringstream entry;
                 entry << "{"
-                    << "\"Address\":" << (reinterpret_cast<uintptr_t>(method) - gIBaseAddress) << ","
+                    << "\"Address\":" << (reinterpret_cast<uintptr_t>(method) - il2CppOffsets::gIBaseAddress) << ","
                     << "\"Name\":\"" << Il2CppApi::ClassGetName(klass) << "_" << Il2CppApi::MethodGetName(method) << "\","
-                    << "\"MethodAddress\":" << (*(uint64_t*)((char*)method + 8) - gIBaseAddress)
+                    << "\"MethodAddress\":" << (*(uint64_t*)((char*)method + 8) - il2CppOffsets::gIBaseAddress)
                     << "}";
                 entries.push_back(entry.str());
             }
         }
     }
-    
+
     for (size_t i = 0; i < entries.size(); ++i) {
         if (i > 0) ss << ",";
         ss << entries[i];
