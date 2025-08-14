@@ -2,19 +2,74 @@
 #include "Il2CppMetadata.h"
 #include "../Core/il2cpp/Api/Il2CppApi.h"
 
+
+enum class Il2CppType_Flag {
+    is_param,
+    is_return,
+    is_field,
+    is_class,
+};
+
+std::string Il2CppType_Helper(const Il2CppType* type_ptr, Il2CppType_Flag flag) {
+    std::string ret;
+    const uint8_t type_flag = (reinterpret_cast<const uint8_t*>(type_ptr))[11];
+
+    if (flag == Il2CppType_Flag::is_return
+        || flag == Il2CppType_Flag::is_field) {
+
+        if (type_flag & IL2CPP_TYPE_BYREF) {
+            ret += "ref ";
+        }
+    }
+
+    if (flag == Il2CppType_Flag::is_param) {
+        if (type_flag & IL2CPP_TYPE_BYREF) {
+            if (type_ptr->attrs & PARAM_ATTRIBUTE_OUT && !(type_ptr->attrs & PARAM_ATTRIBUTE_IN)) {
+                ret += "out ";
+            }
+            else if (type_ptr->attrs & PARAM_ATTRIBUTE_IN && !(type_ptr->attrs & PARAM_ATTRIBUTE_OUT)) {
+                ret += "in ";
+            }
+            else {
+                ret += "ref ";
+            }
+        }
+        else {
+            if (type_ptr->attrs & PARAM_ATTRIBUTE_IN) {
+                ret += "[In] ";
+            }
+            if (type_ptr->attrs & PARAM_ATTRIBUTE_OUT) {
+                ret += "[Out] ";
+            }
+        }
+    }
+
+    ret += Il2CppApi::TypeGetName(type_ptr);
+
+    return ret;
+}
+
 std::string Il2CppMetadata::DumpClass(Il2CppClass* klass) {
-    Il2CppApi::Initialize();
+
+    uint8_t* byte_klass = reinterpret_cast<uint8_t*>(klass);
     std::stringstream outPut;
-    /*Il2CppApi::ClassInit(klass);*/
+
+    /*Il2CppApi::ClassInit(klass); */
+
     auto QualName = Il2CppApi::TypeGetName(Il2CppApi::ClassGetType(klass));
+
     outPut << "\n// Namespace: " << Il2CppApi::ClassGetNamespace(klass) << "\n";
+
     auto flags = Il2CppApi::ClassGetFlags(klass);
+
     if (flags & TYPE_ATTRIBUTE_SERIALIZABLE) {
         outPut << "[Serializable]\n";
     }
     //TODO attribute
     bool is_valuetype = Il2CppApi::ClassIsValueType(klass);
-    auto is_enum = Il2CppApi::ClassIsEnum(klass);
+
+    bool is_enum = Il2CppApi::ClassIsEnum(klass);
+
     auto visibility = flags & TYPE_ATTRIBUTE_VISIBILITY_MASK;
     switch (visibility) {
     case TYPE_ATTRIBUTE_PUBLIC:
@@ -68,12 +123,10 @@ std::string Il2CppMetadata::DumpClass(Il2CppClass* klass) {
     }
     {
         size_t count = 0;
-        auto interfaces = Il2CppApi::ClassGetInterfaces(
-            reinterpret_cast<const uint8_t*>(klass),
-            count
-        );
+        auto interfaces = Il2CppApi::ClassGetInterfaces(byte_klass, count);
+
         for (size_t i = 0; i < count; ++i) {
-            auto itf = reinterpret_cast<Il2CppClass*>(interfaces[i]);
+            Il2CppClass* itf = reinterpret_cast<Il2CppClass*>(interfaces[i]);
             if (itf) {
                 const Il2CppType* ifaceType = Il2CppApi::ClassGetType(itf);
                 const char* fullName = Il2CppApi::TypeGetName(ifaceType);
@@ -99,13 +152,13 @@ std::string Il2CppMetadata::DumpClass(Il2CppClass* klass) {
 
 std::string Il2CppMetadata::DumpClassMethods(Il2CppClass* klass) {
     std::stringstream outPut;
-    auto gIBaseAddress{ Il2CppApi::GetImageBase() };
+
     outPut << "\n\t// Methods\n";
     void* iter = nullptr;
-    while (auto method = Il2CppApi::ClassGetMethods(klass, &iter)) {
+    while (const uint8_t* method = Il2CppApi::ClassGetMethods(klass, &iter)) {
         //TODO attribute
-        int64_t VA = *(reinterpret_cast<const uint64_t*>((const char*)method + il2CppOffsets::Methods::method_pointer));
-        int64_t RVA = VA - gIBaseAddress;
+        int64_t VA = *(reinterpret_cast<const uint64_t*>(method + il2CppOffsets::Methods::method_pointer));
+        int64_t RVA = VA - il2CppOffsets::gIBaseAddress;
         if (method) {
             outPut << "\t// RVA: 0x"
                 << std::hex << RVA
@@ -116,53 +169,29 @@ std::string Il2CppMetadata::DumpClassMethods(Il2CppClass* klass) {
             outPut << "\t// RVA: 0x VA: 0x0";
         }
         outPut << "\n\t";
-        uint32_t flags = *reinterpret_cast<unsigned short*>(
-            reinterpret_cast<char*>(method) + il2CppOffsets::Methods::il2cpp_method_get_flags);
+        const uint32_t flags = *reinterpret_cast<const uint32_t*>(method + il2CppOffsets::Methods::il2cpp_method_get_flags);
         outPut << Il2CppApi::GetMethodModifier(flags);
         //TODO genericContainerIndex
 
-        auto return_type = Il2CppApi::MethodGetReturnType(method);
-        const char* rt_ptr = reinterpret_cast<const char*>(return_type);
-        if (rt_ptr[11] & IL2CPP_TYPE_BYREF) {
-            outPut << "ref ";
-        }
-        const char* return_full = Il2CppApi::TypeGetName(return_type);
-        outPut << return_full << " " << Il2CppApi::MethodGetName(method)
-            << "(";
+		const Il2CppType* return_type = Il2CppApi::MethodGetReturnType(method);
 
-        auto param_count = Il2CppApi::MethodGetParamCount(method);
-        for (int i = 0; i < (int)param_count; ++i) {
-            const Il2CppType* param = Il2CppApi::MethodGetParam(method, i);
+        outPut << Il2CppType_Helper(return_type, Il2CppType_Flag::is_return) << " "
+            
+            << Il2CppApi::MethodGetName(method) << "(";
 
 
-            const uint8_t type_flag = (reinterpret_cast<const uint8_t*>(param))[11];
+        const uint32_t param_count = Il2CppApi::MethodGetParamCount(method);
+        for (uint32_t i = 0; i < param_count; ++i) {
 
-            if (type_flag & IL2CPP_TYPE_BYREF) {
-                if (param->attrs & PARAM_ATTRIBUTE_OUT && !(param->attrs & PARAM_ATTRIBUTE_IN)) {
-                    outPut << "out ";
-                }
-                else if (param->attrs & PARAM_ATTRIBUTE_IN && !(param->attrs & PARAM_ATTRIBUTE_OUT)) {
-                    outPut << "in ";
-                }
-                else {
-                    outPut << "ref ";
-                }
-            }
-            else {
-                if (param->attrs & PARAM_ATTRIBUTE_IN) {
-                    outPut << "[In] ";
-                }
-                if (param->attrs & PARAM_ATTRIBUTE_OUT) {
-                    outPut << "[Out] ";
-                }
-            }
-            const char* param_full = Il2CppApi::TypeGetName(param);
-            outPut << param_full << " "
+			const Il2CppType* param_type = Il2CppApi::MethodGetParam(method, i);
+
+            outPut << Il2CppType_Helper(param_type, Il2CppType_Flag::is_param) << " "
+
                 << Il2CppApi::MethodGetParamName(method, i);
             outPut << ", ";
         }
 
-        if (param_count != nullptr) {
+        if (param_count != 0) {
             outPut.seekp(-2, std::ios_base::cur);
         }
         outPut << ") { }\n";
@@ -211,9 +240,12 @@ std::string Il2CppMetadata::DumpClassFields(Il2CppClass* klass) {
                 outPut << "readonly ";
             }
         }
-        auto field_type = Il2CppApi::FieldGetType(field);
-        auto field_class = Il2CppApi::FromIl2CppType(field_type);
-        outPut << Il2CppApi::ClassGetName(field_class) << " " << Il2CppApi::FieldGetName(field);
+        const Il2CppType* field_type = Il2CppApi::FieldGetType(field);
+
+        outPut << Il2CppType_Helper(field_type, Il2CppType_Flag::is_field) <<
+
+            " " << Il2CppApi::FieldGetName(field);
+
         if (attrs & FIELD_ATTRIBUTE_LITERAL && is_enum) {
             uint64_t val = 0;
             Il2CppApi::FieldStaticGetValue(field, &val);
