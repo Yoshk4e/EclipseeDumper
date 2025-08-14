@@ -1,7 +1,5 @@
-// dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
 #include <functional>
-#include "../ProtoGen/ProtoBuf.h"
 #include "../Core/il2cpp/Api/Il2CppApi.h"
 #include "../Core/il2cpp/Metadata/Il2CppMetadata.h"
 #include "../Utils/ScriptJson.h"
@@ -132,4 +130,5 @@ DWORD WINAPI MainThread(LPVOID lpReserved) {
 
     UnloadDll(lpReserved);
     return 0;
+
 }
