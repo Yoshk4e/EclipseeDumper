@@ -3,8 +3,8 @@ A PoC Dumper made for a specific anime game for educational purposes
 
 ## Supported Versions
 
-- [x] OSREL5.6 (Offsets of it are zeroed so same as OSREL5.7)
-- [ ] OSREL5.7 (Its Just a matter of Updating Offsets do it yourself)
+- [x] OSREL5.6 (nah)
+- [x] OSREL5.7 
 
 ## Usage
 
