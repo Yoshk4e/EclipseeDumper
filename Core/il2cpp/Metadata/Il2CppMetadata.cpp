@@ -5,7 +5,7 @@
 std::string Il2CppMetadata::DumpClass(Il2CppClass* klass) {
     Il2CppApi::Initialize();
     std::stringstream outPut;
-    Il2CppApi::ClassInit(klass);
+    /*Il2CppApi::ClassInit(klass);*/
     auto QualName = Il2CppApi::TypeGetName(Il2CppApi::ClassGetType(klass));
     outPut << "\n// Namespace: " << Il2CppApi::ClassGetNamespace(klass) << "\n";
     auto flags = Il2CppApi::ClassGetFlags(klass);
