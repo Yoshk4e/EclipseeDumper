@@ -128,6 +128,10 @@ Pull requests are welcome. Keep changes aligned with the architecture.
 - [libil2cpp](https://github.com/MlgmXyysd/libil2cpp)
 - [IL2CPPRuntimeDumper](https://github.com/lilmayofuksu/Il2CppRuntimeDumper)
 
+
+## Specialized Wiki
+- soon™
+
 ## License
 
 MIT. See `LICENSE`.
