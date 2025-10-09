@@ -120,6 +120,9 @@ Guidance:
 
 Pull requests are welcome. Keep changes aligned with the architecture.
 
+## Help
+DM me on [discord](https://discordapp.com/users/932289998634487838)
+
 ## References
 
 - [Rumi's Blog](https://blog.rumi.dev/blog/genshin-runtime-dump)
@@ -130,7 +133,24 @@ Pull requests are welcome. Keep changes aligned with the architecture.
 
 
 ## Specialized Wiki
-- soon™
+- ~soon™~
+- sorry i scraped the idea i might think about it later
+
+## Donation 
+BTC:
+`bc1qgtyshk3pufytrt8stqj8r2gk7lghgqvh84ywlf`
+
+BCH:
+`qq7yc6qygmhnqucuf63s4l3tmj6pz8kaev892cu5hu`
+
+
+ETH(BNB):
+`0x94260c7F0D977076aac9D1BafA060f7513B9Ee4C`
+
+
+Stellar:
+`GARG2WCHYK55PUR44PJJNK5EFG32DBSM6IEA2JYA7XLW2QBDZYGTU4Y3
+`
 
 ## License
 
