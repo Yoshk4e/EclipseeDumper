@@ -1,3 +1,14 @@
+> [!WARNING]
+> Notice of Deprecation (Effective Immediately)
+
+Since I've noticed alot of *kebi pastes after open sourcing this project and other great people like rumi have published their blog (it would hand hold you until a certain point) recently alot of exit scam cheetos popped up out of nowhere from Indonesians,etc I've decided to deprecate this project in favor of not making gi a mainstream you guys have fun until MHY changes something you're on your own now
+
+## What this means
+- I won't be sharing any offsets anymore
+- I won't maintain the public repo anymore (but that doesn't mean i won't update it for my personal use)
+- I won't be accepting any kind of issue or fix
+
+
 # EclipseDumper
 
 A modern, configurable MHY0 IL2CPP dumper with clean architecture and versioned offset support.
